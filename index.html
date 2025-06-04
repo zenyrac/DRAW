@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE BLACK BOOK™</title>
+    <style>
+        :root {
+            --primary: #0f0f0f;
+            --secondary: #1a1a1a;
+            --accent: #7f5af0;
+            --text: #fffffe;
+            --error: #ff3860;
+            --success: #2cb67d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            cursor: none;
+        }
+
+        /* Passcode Screen */
+        .passcode-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.5s ease;
+            cursor: default;
+        }
+
+        .passcode-container {
+            background-color: var(--secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: fadeInUp 0.5s 0.3s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .passcode-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .passcode-subtitle {
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .passcode-input {
+            background-color: var(--primary);
+            border: 2px solid #333;
+            color: var(--text);
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .passcode-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(127, 90, 240, 0.3);
+        }
+
+        .error-message {
+            color: var(--error);
+            margin-top: 1rem;
+            height: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        .title {
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .title span {
+            font-size: 0.8rem;
+            vertical-align: super;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .countdown-container {
+            position: absolute;
+            top: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background-color: rgba(26, 26, 26, 0.8);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+        }
+
+        .countdown-text {
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .countdown-timer {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .pen-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ff3860;
+            margin-left: 0.8rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        .pen-indicator.active {
+            background-color: var(--success);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Results Screen */
+        .results-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .results-text {
+            max-width: 600px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .final-message {
+            max-width: 600px;
+            margin-top: 3rem;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: var(--accent);
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s 2s forwards;
+        }
+
+        /* Cursor Styles */
+        .pen-cursor {
+            position: fixed;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            pointer-events: none;
+            z-index: 100;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            display: none;
+        }
+
+        .pen-cursor::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 24px;
+            background-color: var(--accent);
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        
+        .instructions {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(26, 26, 26, 0.8);
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .click-to-draw {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(26, 26, 26, 0.8);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Passcode Screen -->
+    <div class="passcode-screen">
+        <div class="passcode-container">
+            <h1 class="passcode-title">THE BLACK BOOK<span>™</span></h1>
+            <p class="passcode-subtitle">Enter the passcode to continue</p>
+            <input type="password" class="passcode-input" placeholder="Enter passcode" autofocus>
+            <div class="error-message"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="title">THE BLACK BOOK<span>™</span></h1>
+        
+        <div class="countdown-container">
+            <span class="countdown-text">Drawing time remaining:</span>
+            <span class="countdown-timer">20</span>
+            <div class="pen-indicator active"></div>
+        </div>
+        
+        <div class="click-to-draw">Click anywhere to start drawing</div>
+        <div class="instructions">Release mouse button to pause drawing</div>
+
+        <canvas id="drawingCanvas"></canvas>
+        
+        <div class="pen-cursor"></div>
+    </div>
+
+    <!-- Results Screen -->
+    <div class="results-screen">
+        <h1 class="results-title">Your Mental Canvas</h1>
+        <p class="results-text">If your drawing appears random or scribbled, it suggests your mental state may not be fully at peace and stable. If you created something more intentional or meaningful, it indicates a steadier state of mind.</p>
+        <p class="final-message">Life is full of ups and downs, but never let it control your mind and body. It's your weapon.</p>
+    </div>
+
+    <script>
+        // Passcode System
+        const PASSCODE = "1947";
+        const passcodeScreen = document.querySelector('.passcode-screen');
+        const passcodeInput = document.querySelector('.passcode-input');
+        const errorMessage = document.querySelector('.error-message');
+        const mainContent = document.querySelector('.main-content');
+
+        passcodeInput.addEventListener('input', checkPasscode);
+
+        function checkPasscode() {
+            if (passcodeInput.value === PASSCODE) {
+                errorMessage.textContent = '';
+                passcodeScreen.style.opacity = '0';
+                passcodeScreen.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    passcodeScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    initDrawingApp();
+                }, 500);
+            } else if (passcodeInput.value.length === PASSCODE.length) {
+                errorMessage.textContent = 'Incorrect passcode. Please try again.';
+                passcodeInput.value = '';
+            }
+        }
+
+        // Drawing Application
+        function initDrawingApp() {
+            const canvas = document.getElementById('drawingCanvas');
+            const ctx = canvas.getContext('2d');
+            const countdownTimer = document.querySelector('.countdown-timer');
+            const penIndicator = document.querySelector('.pen-indicator');
+            const penCursor = document.querySelector('.pen-cursor');
+            const resultsScreen = document.querySelector('.results-screen');
+            const instructions = document.querySelector('.instructions');
+            const clickToDraw = document.querySelector('.click-to-draw');
+            
+            // Set canvas size
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Drawing state
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            let currentCountdown = 20;
+            let countdownInterval;
+            
+            // Custom pen cursor
+            document.addEventListener('mousemove', (e) => {
+                penCursor.style.left = e.clientX + 'px';
+                penCursor.style.top = e.clientY + 'px';
+                
+                // Draw if currently drawing
+                if (isDrawing) {
+                    draw(e);
+                }
+            });
+            
+            // Start the countdown
+            startCountdown();
+            
+            function startCountdown() {
+                countdownTimer.textContent = currentCountdown;
+                penIndicator.classList.add('active');
+                penCursor.style.display = 'block';
+                
+                countdownInterval = setInterval(() => {
+                    currentCountdown--;
+                    countdownTimer.textContent = currentCountdown;
+                    
+                    if (currentCountdown <= 0) {
+                        clearInterval(countdownInterval);
+                        endDrawingSession();
+                    }
+                }, 1000);
+            }
+            
+            function endDrawingSession() {
+                // Disable drawing
+                isDrawing = false;
+                penIndicator.classList.remove('active');
+                penCursor.style.display = 'none';
+                instructions.style.display = 'none';
+                clickToDraw.style.display = 'none';
+                
+                // Hide countdown
+                document.querySelector('.countdown-container').style.opacity = '0';
+                
+                // Show results after delay
+                setTimeout(() => {
+                    showResults();
+                }, 2000);
+            }
+            
+            // Drawing functions
+            function draw(e) {
+                if (!isDrawing) return;
+                
+                ctx.strokeStyle = '#7f5af0';
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                ctx.lineWidth = 3;
+                
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(e.clientX, e.clientY);
+                ctx.stroke();
+                
+                [lastX, lastY] = [e.clientX, e.clientY];
+            }
+            
+            // Click to start drawing
+            canvas.addEventListener('mousedown', (e) => {
+                if (currentCountdown > 0) {
+                    isDrawing = true;
+                    [lastX, lastY] = [e.clientX, e.clientY];
+                    clickToDraw.style.display = 'none';
+                    instructions.style.display = 'block';
+                    // Start drawing immediately
+                    draw(e);
+                }
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                if (isDrawing) {
+                    isDrawing = false;
+                    if (currentCountdown > 0) {
+                        clickToDraw.style.display = 'block';
+                        instructions.style.display = 'none';
+                    }
+                }
+            });
+            
+            canvas.addEventListener('mouseout', () => {
+                isDrawing = false;
+                if (currentCountdown > 0) {
+                    clickToDraw.style.display = 'block';
+                    instructions.style.display = 'none';
+                }
+            });
+            
+            function showResults() {
+                resultsScreen.style.display = 'flex';
+                
+                // Fade in results
+                setTimeout(() => {
+                    resultsScreen.style.backdropFilter = 'blur(10px)';
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>
