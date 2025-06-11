@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE BLACK BOOK™</title>
+    <title>THE CODEX OF FATE</title>
     <style>
         :root {
-            --primary: #0f0f0f;
-            --secondary: #1a1a1a;
-            --accent: #7f5af0;
-            --text: #fffffe;
-            --error: #ff3860;
-            --success: #2cb67d;
+            --primary: #0a0a08;
+            --secondary: #1a1710;
+            --accent: #a67c52;
+            --text: #e8e0c9;
+            --error: #c53d3d;
+            --success: #4a7c59;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
         }
 
         body {
@@ -28,6 +28,7 @@
             overflow: hidden;
             position: relative;
             cursor: none;
+            background-image: url('https://www.transparenttextures.com/patterns/papyrus.png');
         }
 
         /* Passcode Screen */
@@ -37,8 +38,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
+            background-color: rgba(10, 10, 8, 0.97);
+            backdrop-filter: blur(5px);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -51,14 +52,27 @@
         .passcode-container {
             background-color: var(--secondary);
             padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            border: 1px solid var(--accent);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
             text-align: center;
             max-width: 400px;
             width: 90%;
             transform: translateY(-20px);
             opacity: 0;
             animation: fadeInUp 0.5s 0.3s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .passcode-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #a67c52, #d4b483, #a67c52);
         }
 
         @keyframes fadeInUp {
@@ -73,31 +87,35 @@
             margin-bottom: 1rem;
             color: var(--accent);
             font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
         }
 
         .passcode-subtitle {
             margin-bottom: 2rem;
             opacity: 0.8;
+            font-style: italic;
         }
 
         .passcode-input {
             background-color: var(--primary);
-            border: 2px solid #333;
+            border: 1px solid #3a372e;
             color: var(--text);
             padding: 0.8rem 1rem;
-            border-radius: 5px;
+            border-radius: 3px;
             width: 100%;
             font-size: 1rem;
             margin-bottom: 1rem;
             text-align: center;
             letter-spacing: 2px;
             transition: all 0.3s;
+            font-family: 'Times New Roman', Times, serif;
         }
 
         .passcode-input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(127, 90, 240, 0.3);
+            box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.3);
         }
 
         .error-message {
@@ -105,6 +123,7 @@
             margin-top: 1rem;
             height: 20px;
             font-size: 0.9rem;
+            font-style: italic;
         }
 
         /* Main Content */
@@ -126,6 +145,8 @@
             z-index: 10;
             text-align: center;
             pointer-events: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
         }
 
         .title span {
@@ -138,6 +159,7 @@
             top: 0;
             left: 0;
             z-index: 1;
+            background-image: url('https://www.transparenttextures.com/patterns/old-paper.png');
         }
 
         .countdown-container {
@@ -146,13 +168,14 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
-            background-color: rgba(26, 26, 26, 0.8);
+            background-color: rgba(26, 23, 16, 0.8);
             padding: 0.8rem 1.5rem;
-            border-radius: 50px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             pointer-events: none;
+            border: 1px solid var(--accent);
         }
 
         .countdown-text {
@@ -170,7 +193,7 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background-color: #ff3860;
+            background-color: var(--error);
             margin-left: 0.8rem;
             animation: pulse 1.5s infinite;
         }
@@ -192,41 +215,108 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
+            background-color: rgba(10, 10, 8, 0.97);
+            backdrop-filter: blur(5px);
             display: none;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             z-index: 50;
             text-align: center;
             padding: 2rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .results-content {
+            max-width: 700px;
+            padding: 2rem;
+            background-color: rgba(26, 23, 16, 0.7);
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            margin-bottom: 2rem;
         }
 
         .results-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 2rem;
             color: var(--accent);
             font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .results-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
         }
 
         .results-text {
-            max-width: 600px;
             margin-bottom: 2rem;
-            line-height: 1.6;
+            line-height: 1.8;
             font-size: 1.1rem;
+            text-align: left;
+        }
+
+        .ancient-quote {
+            font-style: italic;
+            color: var(--accent);
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-left: 3px solid var(--accent);
+            background-color: rgba(166, 124, 82, 0.1);
+        }
+
+        .fame-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background-color: rgba(26, 23, 16, 0.5);
+            border-radius: 5px;
+            border: 1px dashed var(--accent);
+        }
+
+        .fame-title {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
 
         .final-message {
-            max-width: 600px;
             margin-top: 3rem;
             font-size: 1.3rem;
-            line-height: 1.6;
+            line-height: 1.8;
             color: var(--accent);
             font-weight: 500;
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 0.8s 2s forwards;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--accent);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            animation: bounce 2s infinite;
+            z-index: 100;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
         }
 
         /* Cursor Styles */
@@ -246,10 +336,10 @@
         .pen-cursor::after {
             content: '';
             position: absolute;
-            width: 8px;
-            height: 24px;
+            width: 6px;
+            height: 20px;
             background-color: var(--accent);
-            top: -24px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
             border-radius: 3px;
@@ -260,13 +350,14 @@
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            background-color: rgba(26, 26, 26, 0.8);
+            background-color: rgba(26, 23, 16, 0.8);
             padding: 0.8rem 1.5rem;
             border-radius: 5px;
             font-size: 0.9rem;
             opacity: 0.8;
             z-index: 10;
             pointer-events: none;
+            border: 1px solid var(--accent);
         }
         
         .click-to-draw {
@@ -274,13 +365,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(26, 26, 26, 0.8);
+            background-color: rgba(26, 23, 16, 0.8);
             padding: 1rem 2rem;
             border-radius: 5px;
             font-size: 1rem;
             z-index: 10;
             text-align: center;
             pointer-events: none;
+            border: 1px solid var(--accent);
         }
     </style>
 </head>
@@ -288,25 +380,25 @@
     <!-- Passcode Screen -->
     <div class="passcode-screen">
         <div class="passcode-container">
-            <h1 class="passcode-title">THE BLACK BOOK<span>™</span></h1>
-            <p class="passcode-subtitle">Enter the passcode to continue</p>
-            <input type="password" class="passcode-input" placeholder="Enter passcode" autofocus>
+            <h1 class="passcode-title">THE CODEX OF FATE</h1>
+            <p class="passcode-subtitle">Put in the code to proceed</p>
+            <input type="password" class="passcode-input" placeholder="Enter the sacred word" autofocus>
             <div class="error-message"></div>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <h1 class="title">THE BLACK BOOK<span>™</span></h1>
+        <h1 class="title">THE CODEX OF FATE</h1>
         
         <div class="countdown-container">
-            <span class="countdown-text">Drawing time remaining:</span>
+            <span class="countdown-text">Time remaining:</span>
             <span class="countdown-timer">20</span>
             <div class="pen-indicator active"></div>
         </div>
         
-        <div class="click-to-draw">Click anywhere to start drawing</div>
-        <div class="instructions">Release mouse button to pause drawing</div>
+        <div class="click-to-draw">Touch the parchment to begin your inscription</div>
+        <div class="instructions">Release to pause your writings</div>
 
         <canvas id="drawingCanvas"></canvas>
         
@@ -315,9 +407,41 @@
 
     <!-- Results Screen -->
     <div class="results-screen">
-        <h1 class="results-title">Your Mental Canvas</h1>
-        <p class="results-text">If your drawing appears random or scribbled, it suggests your mental state may not be fully at peace and stable. If you created something more intentional or meaningful, it indicates a steadier state of mind.</p>
-        <p class="final-message">Life is full of ups and downs, but never let it control your mind and body. It's your weapon.</p>
+        <div class="results-content">
+            <h1 class="results-title">Revelation of the Mind's Eye</h1>
+            <p class="results-text">The patterns you've inscribed upon this ancient parchment reveal much about the state of your inner world. The ancients believed that the hand is guided by the soul, and what flows from it is a mirror to one's deepest self.</p>
+            
+            <div class="ancient-quote">
+                "As the river carves its path through stone, so too does the mind shape its reality through thought and action."<br>
+                — Inscription from the Temple of Delphi
+            </div>
+            
+            <p class="results-text">If your markings appear chaotic or without form, it suggests a tempest within your spirit. The great philosophers of old taught that such turbulence often precedes great creativity or change. Many renowned figures throughout history—Leonardo da Vinci, Nikola Tesla, even Alexander the Great—all spoke of periods of mental unrest that preceded their greatest achievements.</p>
+            
+            <div class="fame-section">
+                <h3 class="fame-title">The Path to Renown</h3>
+                <p class="results-text">The journey to fame is never a straight path. Consider these truths from those who achieved lasting renown:</p>
+                <ul style="text-align: left; margin-left: 1.5rem; line-height: 1.8;">
+                    <li>Michelangelo destroyed many of his early sketches, calling them "unworthy"—yet these were the foundations of his mastery.</li>
+                    <li>Shakespeare's first plays were poorly received, with critics calling his work "vulgar and common."</li>
+                    <li>Cleopatra, one of the most famous women in history, spoke nine languages and was a brilliant strategist—her fame built on substance, not just beauty.</li>
+                </ul>
+            </div>
+            
+            <p class="results-text">If your drawing shows intention and clarity, it reveals a mind prepared for the challenges of achievement. This stability is precious—the Stoic philosophers called it "ataraxia," a state of serene calmness that allows for clear decision-making and purposeful action.</p>
+            
+            <div class="ancient-quote">
+                "Fame is a vapor, popularity an accident, riches take wings. Only one thing endures and that is character."<br>
+                — Horace, Ancient Roman Poet
+            </div>
+            
+            <p class="final-message">
+                The wheel of fortune turns for all. Today's obscurity may be tomorrow's renown, and today's fame may fade like yesterday's sunset. <br><br>
+                What endures is the work, the character, and the legacy you build stone by stone. <br><br>
+                Guard your mind as the sacred temple it is—for from its halls emerge all conquests, all creations, and all that the world will remember of you.
+            </p>
+        </div>
+        <div class="scroll-indicator">Scroll to continue reading</div>
     </div>
 
     <script>
@@ -342,7 +466,7 @@
                     initDrawingApp();
                 }, 500);
             } else if (passcodeInput.value.length === PASSCODE.length) {
-                errorMessage.textContent = 'Incorrect passcode. Please try again.';
+                errorMessage.textContent = 'The word is not recognized. Try again.';
                 passcodeInput.value = '';
             }
         }
@@ -362,6 +486,10 @@
             function resizeCanvas() {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
+                
+                // Set parchment background
+                ctx.fillStyle = '#f5f0e1';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
@@ -417,6 +545,8 @@
                 // Show results after delay
                 setTimeout(() => {
                     showResults();
+                    // Auto-scroll slowly
+                    autoScrollResults();
                 }, 2000);
             }
             
@@ -424,10 +554,10 @@
             function draw(e) {
                 if (!isDrawing) return;
                 
-                ctx.strokeStyle = '#7f5af0';
+                ctx.strokeStyle = '#5c3a21';
                 ctx.lineJoin = 'round';
                 ctx.lineCap = 'round';
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 2;
                 
                 ctx.beginPath();
                 ctx.moveTo(lastX, lastY);
@@ -472,8 +602,32 @@
                 
                 // Fade in results
                 setTimeout(() => {
-                    resultsScreen.style.backdropFilter = 'blur(10px)';
+                    resultsScreen.style.backdropFilter = 'blur(5px)';
                 }, 100);
+            }
+            
+            function autoScrollResults() {
+                const resultsContent = document.querySelector('.results-content');
+                const finalMessage = document.querySelector('.final-message');
+                let scrollPosition = 0;
+                const scrollEnd = resultsContent.scrollHeight - window.innerHeight;
+                const scrollDuration = 60000; // 60 seconds for full scroll
+                const scrollStep = scrollEnd / (scrollDuration / 100);
+                
+                const scrollInterval = setInterval(() => {
+                    scrollPosition += scrollStep;
+                    window.scrollTo(0, scrollPosition);
+                    
+                    // Stop when reached bottom or user interacts
+                    if (scrollPosition >= scrollEnd) {
+                        clearInterval(scrollInterval);
+                    }
+                }, 100);
+                
+                // Stop auto-scroll if user scrolls manually
+                window.addEventListener('scroll', function() {
+                    clearInterval(scrollInterval);
+                });
             }
         }
     </script>
